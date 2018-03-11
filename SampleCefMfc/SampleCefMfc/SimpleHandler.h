@@ -10,11 +10,12 @@
 #include <list>
 
 class SimpleHandler : public CefClient,
+					  public CefKeyboardHandler,
                       public CefDisplayHandler,
                       public CefLifeSpanHandler,
                       public CefLoadHandler {
  public:
-  explicit SimpleHandler();
+  explicit SimpleHandler(HWND pParent);
   ~SimpleHandler();
 
   // Provide access to the single global instance of this object.
@@ -29,6 +30,10 @@ class SimpleHandler : public CefClient,
   }
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
     return this;
+  }
+
+  virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE {
+	  return this;
   }
 
   // CefDisplayHandler methods:
@@ -50,6 +55,10 @@ class SimpleHandler : public CefClient,
   // Request that all existing browser windows close.
   void CloseAllBrowsers(bool force_close);
 
+  virtual bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
+	  const CefKeyEvent& event,
+	  CefEventHandle os_event,
+	  bool* is_keyboard_shortcut);
   bool IsClosing() const { return is_closing_; }
 
  private:
@@ -63,6 +72,7 @@ class SimpleHandler : public CefClient,
 
   bool is_closing_;
 
+  HWND m_pParent;
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(SimpleHandler);
 };

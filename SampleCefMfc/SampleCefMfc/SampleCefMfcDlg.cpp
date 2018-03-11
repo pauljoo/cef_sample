@@ -59,21 +59,22 @@ BOOL CSampleCefMfcDlg::OnInitDialog()
 	m_FullScreenRect.right = m_FullScreenRect.left + nFullWidth;
 	m_FullScreenRect.bottom = m_FullScreenRect.top + nFullHeight;
 	
-	//MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
+	MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
 
 	//ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
-	SetHook();
+	ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+	//SetHook();
 
 	
 
-	CRect rtBody;
+	//CRect rtBody;
 	//GetDlgItem(IDC_STATIC_BROWSER)->MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
-	GetDlgItem(IDC_STATIC_BROWSER)->GetWindowRect(&rtBody);
+	//GetDlgItem(IDC_STATIC_BROWSER)->GetWindowRect(&rtBody);
 	CefWindowInfo cefWindowInfo;
-	cefWindowInfo.SetAsChild(GetSafeHwnd(), rtBody);
+	cefWindowInfo.SetAsChild(GetSafeHwnd(), m_FullScreenRect);
 
 	CefBrowserSettings browserSetting;
-	CefRefPtr<SimpleHandler> objEventHandler(new SimpleHandler());
+	CefRefPtr<SimpleHandler> objEventHandler(new SimpleHandler(GetSafeHwnd()));
 	CefBrowserHost::CreateBrowser(cefWindowInfo, objEventHandler.get(), _T("http://www.baidu.com"), browserSetting, NULL);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -129,5 +130,19 @@ void CSampleCefMfcDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	// TODO: 在此处添加消息处理程序代码
-	UnSetHook();
+	//UnSetHook();
+}
+
+BOOL CSampleCefMfcDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN) 
+	{
+		if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
+			return TRUE;
+	}
+
+		
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
+		return TRUE;
+	return CDialog::PreTranslateMessage(pMsg);  //别忘了这句 
 }

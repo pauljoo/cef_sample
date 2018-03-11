@@ -81,11 +81,12 @@ BOOL CSampleCefMfcApp::InitInstance()
 	CefSettings settings;
 	settings.no_sandbox = true;
 	settings.multi_threaded_message_loop = true;
-	//settings.single_process = true;
+	settings.single_process = true;
 	//浏览器回调应用程序级别实现
 	CefRefPtr<SimpleApp> app(new SimpleApp);
 
 	CefInitialize(mainArgs, settings, app.get(), NULL);
+
 	//CefRunMessageLoop();
 	CSampleCefMfcDlg dlg;
 	m_pMainWnd = &dlg;
@@ -122,4 +123,3 @@ BOOL CSampleCefMfcApp::InitInstance()
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
 }
-

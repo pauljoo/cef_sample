@@ -3,7 +3,7 @@
 // can be found in the LICENSE file.
 #include "stdafx.h"
 #include "SimpleHandler.h"
-
+#include "afxdialogex.h"
 
 #include <sstream>
 #include <string>
@@ -21,10 +21,11 @@ SimpleHandler* g_instance = NULL;
 
 }  // namespace
 
-SimpleHandler::SimpleHandler()
+SimpleHandler::SimpleHandler(HWND pParent)
     : is_closing_(false) {
   DCHECK(!g_instance);
   g_instance = this;
+  m_pParent = pParent;
 }
 
 SimpleHandler::~SimpleHandler() {
@@ -65,6 +66,32 @@ bool SimpleHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   // Allow the close. For windowed browsers this will result in the OS close
   // event being sent.
   return false;
+}
+
+bool SimpleHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
+	const CefKeyEvent& event,
+	CefEventHandle os_event,
+	bool* is_keyboard_shortcut) {
+	if (os_event && os_event->message == WM_SYSKEYDOWN) {
+		if (os_event->message == WM_SYSKEYDOWN && os_event->wParam == VK_F4)  //ÆÁ±ÎALT+F4
+		{
+			PostMessage(m_pParent, os_event->message, os_event->wParam, os_event->lParam);
+
+			return TRUE;
+
+		}
+					/*switch (os_event->wParam) {
+		case VK_F10:
+			
+			return true;
+			break;
+		case VK_F4:
+			
+			return true;
+			break; //Use GetKeyState(VK_MENU) to check if ALT is down...
+		}*/
+	}
+	return false;
 }
 
 void SimpleHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {

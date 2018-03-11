@@ -31,6 +31,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 public:
 	afx_msg void OnClose();
 	afx_msg void OnDestroy();
