@@ -18,7 +18,7 @@ public:
 
 	virtual void OnBeforeCommandLineProcessing(
 		const CefString& process_type, CefRefPtr<CefCommandLine> command_line) {
-		//command_line->AppendSwitch("disable-gpu");
+		command_line->AppendSwitch("disable-gpu");
 	}
 private:
 	HWND m_pParentWindow;

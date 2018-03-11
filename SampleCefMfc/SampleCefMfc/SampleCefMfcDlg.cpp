@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CSampleCefMfcDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_CLOSE()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -58,15 +59,15 @@ BOOL CSampleCefMfcDlg::OnInitDialog()
 	m_FullScreenRect.right = m_FullScreenRect.left + nFullWidth;
 	m_FullScreenRect.bottom = m_FullScreenRect.top + nFullHeight;
 	
-	MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
+	//MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
 
-	ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
+	//ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
 	SetHook();
 
 	
 
 	CRect rtBody;
-	GetDlgItem(IDC_STATIC_BROWSER)->MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
+	//GetDlgItem(IDC_STATIC_BROWSER)->MoveWindow(0, 0, m_FullScreenRect.Width(), m_FullScreenRect.Height(), 1);
 	GetDlgItem(IDC_STATIC_BROWSER)->GetWindowRect(&rtBody);
 	CefWindowInfo cefWindowInfo;
 	cefWindowInfo.SetAsChild(GetSafeHwnd(), rtBody);
@@ -118,7 +119,15 @@ HCURSOR CSampleCefMfcDlg::OnQueryDragIcon()
 void CSampleCefMfcDlg::OnClose()
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	CefShutdown();
-	UnSetHook();
 	CDialogEx::OnClose();
+	
+}
+
+
+void CSampleCefMfcDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	// TODO: 在此处添加消息处理程序代码
+	UnSetHook();
 }

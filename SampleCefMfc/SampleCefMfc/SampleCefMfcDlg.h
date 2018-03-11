@@ -33,4 +33,5 @@ protected:
 
 public:
 	afx_msg void OnClose();
+	afx_msg void OnDestroy();
 };
